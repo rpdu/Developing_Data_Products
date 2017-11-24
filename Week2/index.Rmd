@@ -1,0 +1,65 @@
+---
+title: "DevDataProd_Week2"
+author: "pduchesne"
+date: "24 November 2017"
+output: 
+  html_document: 
+    keep_md: yes
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r buildup, include=FALSE}
+
+set.seed=(29092015)
+setwd("D:/Coursera/09-Developing Data Products/Week2")
+library (leaflet)
+library(rvest)
+library(stringr)
+
+url <- "https://en.wikipedia.org/wiki/List_of_airports_in_Luxembourg"
+
+my_html <- read_html(url)
+my_tables <- html_nodes(my_html,"table")[[1]]
+airport_table <- html_table(my_tables)
+#str(airport_table)
+ll <- nrow(airport_table)
+
+separator<-gregexpr(";",airport_table[,5])
+pos<-separator[[1]][1]
+latfirst<-pos-8
+latlast<-pos-1
+lngfirst<-pos+2
+lnglast<-pos+8
+
+lat<-as.numeric(str_sub(airport_table[,5], latfirst, latlast))
+lng<-as.numeric(str_sub(airport_table[,5], lngfirst, lnglast))
+popup<-airport_table[,4]
+df_points<-data.frame(lat,lng)
+names(df_points) <- c("lat","lng")
+
+AirportIcon <- makeIcon (
+        iconUrl = "airport5.png",
+        iconWidth = 31*215/230, iconHeight = 31,
+        iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r map, echo=FALSE}
+df_points %>% leaflet() %>%
+        addTiles() %>%
+        addMarkers(icon = AirportIcon, popup = popup)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
