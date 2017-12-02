@@ -1,6 +1,6 @@
 ---
-title: "Week3PlotlyAssgt"
-subtitle: "Peer-graded Assignment: R Markdown Presentation & Plotly"
+title: "Recent evolution of total, luxembourgish and foreign population"
+subtitle: "Week 3 Peer-graded Assignment: R Markdown Presentation & Plotly"
 author: "pduchesne"
 date: "01 December 2017"
 output: 
