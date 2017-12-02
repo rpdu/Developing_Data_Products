@@ -1,0 +1,80 @@
+---
+title: "Week3PlotlyAssgt"
+subtitle: "Peer-graded Assignment: R Markdown Presentation & Plotly"
+author: "pduchesne"
+date: "01 December 2017"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Week 3 Assignment
+
+A web page using R Markdown that features a Plotly chart.  
+
+The data for this assignment is sourced from STATEC, the Luxemburgish statistics bureau:
+Evolution of total, luxembourgish and foreign population 1961 - 2017 © STATEC / CTIE found at <http://www.statistiques.public.lu/stat/TableViewer/tableView.aspx?ReportId=12858&IF_Language=eng&MainTheme=2&FldrName=1>.
+
+We have downloaded the csv file to load it into a data frame and prepared it to focused our attention on the year 2000 - 2017 data.
+```{r load_popLU_data, message=FALSE, warning=FALSE}
+#
+set.seed=(29092015)
+library(dplyr);
+#load csv file available at source web site
+df_file <- read.csv("./b1115.csv", header = FALSE, sep = ",", quote = "\"",na.strings="", stringsAsFactors=FALSE)
+library(reshape)
+library(stringr)
+#cleanup the data
+hdr<-str_trim(df_file[,1],side="both")
+df_population <- as.data.frame(t(df_file))
+names(df_population)<-c(hdr)
+names(df_population)[3]<-"Total_pop"
+names(df_population)[6]<-"Prop_Fr"
+df_population<-df_population[-c(1),]
+df_population$Year<-as.numeric(df_population[,1])
+df_population$Total_pop<-as.numeric(df_population[,3])
+df_population$Luxembourgers<-as.numeric(df_population[,4])
+df_population$Foreigners<-as.numeric(df_population[,5])
+#subset the data
+df_population2k<-subset(df_population,Year>=2000)
+
+```
+
+## Plotly Chart
+
+Please note that on the STATEC web site it is possible to view the data in many chart styles. We have used Plotly to advantage in order to enhance the standard Bar Chart by layering in the Proportion of foreigners (in %) as a Line Chart over the Luxembourger, Foreigner and Total population Grouped Bar Chart.
+
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+library(plotly)
+plot_ly(df_population2k) %>%
+        add_trace(x = ~Year, y = ~Luxembourgers, type = 'bar', name = 'Luxembourgers', marker = list(color = '#FFD700', line = list(color = '#FFB90F', width = 1)),
+            hoverinfo = "text",
+            text = ~Luxembourgers) %>%
+         add_trace(x = ~Year, y = ~Foreigners, type = 'bar', name = 'Foreigners',
+            marker = list(color = '"#FF3030', line = list(color = '#CD6600', width = 1)),
+            hoverinfo = "text",
+           text = ~Foreigners) %>%
+         add_trace(x = ~Year, y = ~Total_pop, type = 'bar', name = 'Total population',
+            marker = list(color = '#6495ED', line = list(color = 'rgb(8,48,107)', width = 1)),
+            hoverinfo = "text",
+            text = ~Total_pop) %>%
+         add_trace(x = ~Year, y = ~Prop_Fr, type = 'scatter', mode = 'lines', name = 'Proportion of foreigners (in %)', yaxis = 'y2',
+            line = list(color = '#8B0000'),
+            hoverinfo = "text",
+            text = ~Prop_Fr) %>%
+  layout(title = 'Evolution of total, luxembourgish and foreign population 2000 - 2017',
+         xaxis = list(title = "", tickangle = -45),
+         yaxis = list(side = 'left', title = 'Population'
+#                     , showgrid = FALSE, zeroline = FALSE
+                      ),
+         yaxis2 = list(side = 'right', overlaying = "y", title = 'Proportion of foreigners (in %)', showgrid = FALSE, zeroline = FALSE),
+barmode = 'group', 
+bargap = 0.15#, bargroupgap = 0.1
+)        
+```
+© STATEC / CTIE (http://www.statistiques.public.lu/en/support/notice/index.html#copyright)
+
