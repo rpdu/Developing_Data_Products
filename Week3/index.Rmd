@@ -1,15 +1,12 @@
 ---
-title: "Recent evolution of total, luxembourgish and foreign population"
-subtitle: "Week 3 Peer-graded Assignment: R Markdown Presentation & Plotly"
+title: "Week3Assgntpresentation"
 author: "pduchesne"
-date: "01 December 2017"
-output: 
-  html_document: 
-    keep_md: yes
+date: "3 December 2017"
+output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE)
 ```
 
 ## Week 3 Assignment
@@ -45,8 +42,7 @@ df_population2k<-subset(df_population,Year>=2000)
 ```
 
 ## Plotly Chart
-
-Please note that on the STATEC web site it is possible to view the data in many chart styles. We have used Plotly to advantage in order to enhance the standard Bar Chart by layering in the Proportion of foreigners (in %) as a Line Chart over the Luxembourger, Foreigner and Total population Grouped Bar Chart.
+We have used Plotly to advantage in order to enhance the Bar Chart by layering in the Proportion of foreigners (in %) as a Line Chart over the Grouped Bar Chart.
 
 ```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
 library(plotly)
@@ -76,5 +72,6 @@ barmode = 'group',
 bargap = 0.15#, bargroupgap = 0.1
 )        
 ```
+
 © STATEC / CTIE (http://www.statistiques.public.lu/en/support/notice/index.html#copyright)
 
