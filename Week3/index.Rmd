@@ -1,5 +1,6 @@
 ---
 title: "Week3Assgntpresentation"
+subtitle: "Please click left-right arrow buttons to view presentation"
 author: "pduchesne"
 date: "3 December 2017"
 output: ioslides_presentation
